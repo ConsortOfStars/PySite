@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% if title %}
+    <title>BPA - {{ title }}</title>
+    {% else %}
+    <title>BPA</title>
+    {% endif %}
+  </head>
+  <body>
+    <nav>
+      <div class="item">
+        <a href="/index">Home</a>
+      </div>
+    </nav>
+    {% block content %}{% endblock %}
+  </body>
+</html>
