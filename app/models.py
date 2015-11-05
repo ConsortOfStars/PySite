@@ -7,7 +7,26 @@ class User(db.Model):
     salt = db.Column(db.String(8))
     password = db.Column(db.String(2048))
     level = db.Column(db.Integer)
+    banned = db.Column(db.Boolean)
 
+    @property
+    def is_authenticated(self):
+        if (self.banned) == False: return True
+        else: return False
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
+
+    def get_password(self):
+        return str(self.password)
 
     def __repr__(self):
         return '<User %r>' % (self.username)

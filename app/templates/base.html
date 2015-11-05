@@ -11,9 +11,23 @@
   <body>
     <nav>
       <div class="item">
-        <a href="/index">Home</a>
+        <a href="{{ url_for('index') }}">Home</a>
       </div>
+      {% if g.user.is_authenticated %}
+      <div class="item">
+        <a href="{{ url_for('logout') }}"></a>
+      </div>
+      {% endif %}
     </nav>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
   </body>
 </html>
