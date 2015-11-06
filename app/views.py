@@ -1,8 +1,10 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 from .models import User
+from passlib.hash import pbkdf2_sha256
+from datetime import timedelta
 
 @lm.user_loader
 def load_user(id):
@@ -10,6 +12,8 @@ def load_user(id):
 
 @app.before_request
 def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(days=7)
     g.user = current_user
 
 @app.route('/')
@@ -40,11 +44,13 @@ def login():
         session['remember_me'] = form.remember.data
         user = User.query.filter_by(username = form.username.data).first()
         if user is None:
+            flash("Username/password combo didn't work. Try again.")
             return redirect(url_for('login'))
         else:
             pw_hash = user.get_password()
-            valid = bcrypt.check_password_hash(pw_hash, form.password.data)
+            valid = pbkdf2_sha256.verify(form.password.data, pw_hash)
             if not valid:
+                flash("Username/password combo didn't work. Try again.")
                 return redirect(url_for('login'))
             else:
                 login_user(user, remember = session['remember_me'])
@@ -69,12 +75,13 @@ def register():
         session['remember_me'] = form.remember.data
         user = User.query.filter_by(username = form.username.data).first()
         if user is None and form.accept.data == True:
-            pw_hash = bcrypt.generate_password_hash(form.password.data)
+            pw_hash = pbkdf2_sha256.encrypt(form.password.data, rounds=200000)
             user = User(
                 username = form.username.data,
                 email = form.email.data,
                 password = pw_hash,
-                level = 1
+                level = 1,
+                banned = False
             )
             db.session.add(user)
             db.session.commit()

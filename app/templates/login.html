@@ -1,37 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Login:</h1>
-  <form class="" action="" method="post" name="login">
-    {{ form.hidden_tag() }}
-    <p>
-      Please enter your username:
-      <br>
-      {{ form.username(size=20) }}
-      {% for error in form.username.errors %}
-        <span>{{error}}</span>
-      {% endfor %}
-      <br>
-    </p>
-    <p>
-      Please enter your password:
-      <br>
-      {{ form.password(size=20) }}
-      {% for error in form.password.errors %}
-        <span>{{error}}</span>
-      {% endfor %}
-      <br>
-    </p>
-    <p>
-      {{ form.remember }} Remember Me
-    </p>
-    <p>
-      <input type="submit" name="" value="Sign In">
-    </p>
-  </form>
+  <h4>Login:</h4>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2 col-lg-2"></div>
+      <div class="col-md-2 col-lg-8">
+        <form class="" action="" method="post" name="login" role="login">
+          {{ form.hidden_tag() }}
+          {% for error in form.username.errors %}
+            <div class="alert alert-danger">
+              <strong>Username error:</strong>
+              {{ error }}
+            </div>
+          {% endfor %}
+          <div class="input-group">
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-user"></span>
+            </span>
+            <input type="text" name="username" placeholder="Username" value="" class="form-control" autofocus="">
+          </div>
+          <br>
+          {% for error in form.password.errors %}
+            <div class="alert alert-danger">
+              <strong>Password error: </strong>
+              {{ error }}
+            </div>
+          {% endfor %}
+          <div class="input-group">
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-lock"></span>
+            </span>
+            <input type="password" name="password" value="" class="form-control" placeholder="Password">
+          </div>
+          <br>
+          <p>
+            {{ form.remember }} Remember Me
+          </p>
+          <p>
+            <input type="submit" name="" class="btn btn-default" value="Sign In">
+          </p>
+        </form>
+      </div>
+      <div class="col-md-2 col-lg-2"></div>
+    </div>
+
 
   <p>
-    Don't have an account? <a href="/register">Register Now</a>
+    Don't have an account? <a href="{{ url_for('register') }}">Register Now</a>
   </p>
+  </div>
 
 {% endblock %}

@@ -5,7 +5,7 @@ from wtforms import validators
 class RegistrationForm(Form):
     username = TextField('username', [
         validators.InputRequired(message='This is a required field.'),
-        validators.Length(min=6,max=12)
+        validators.Length(min=6,max=16)
     ])
     email = TextField('email_address', [
         validators.InputRequired(message='This is a required field.'),
@@ -26,7 +26,7 @@ class RegistrationForm(Form):
 class LoginForm(Form):
     username = TextField('username', [
         validators.InputRequired(message='This is a required field.'),
-        validators.Length(min=6,max=12,message='That username is too short.')
+        validators.Length(min=6,max=16,message='That username is not valid or does not exist.')
     ])
     password = PasswordField('password', [
         validators.InputRequired(message='This is a required field.')
